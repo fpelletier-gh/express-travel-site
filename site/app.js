@@ -1,42 +1,38 @@
 const express = require("express");
 const expressHandlebars = require("express-handlebars");
-const path = require("path");
 
 const app = express();
 
 app.engine(
-  "handlebars",
+  ".hbs",
   expressHandlebars({
     defaultLayout: "main",
+    extname: ".hbs",
   })
 );
-app.set("view engine", "hbs");
+app.set("view engine", ".hbs");
 
 const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.type("text/plain");
-  res.sendFile(path.join(__dirname, "views", "layouts", "main.hbs"));
+  res.render("home");
 });
 
 app.get("/about", (req, res) => {
-  res.type("text/plain");
-  res.send("About Meadowlark Travel");
+  res.render("about");
 });
 
 // custom 404 page
 app.use((req, res) => {
-  res.type("text/plain");
   res.status(404);
-  res.send("404 - Not Found");
+  res.render("404");
 });
 
 // custom 500 page
 app.use((err, req, res, next) => {
   console.error(err.message);
-  res.type("text/plain");
   res.status(500);
-  res.send("500 - Server Error");
+  res.render("500");
 });
 
 app.listen(port, () =>
